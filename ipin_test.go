@@ -7,7 +7,7 @@ import (
 	"github.com/coredns/coredns/plugin/test"
 
 	"github.com/miekg/dns"
-	"github.com/wenerme/wps/coredns/plugin/ipin"
+	"github.com/wenerme/coredns-ipin"
 	"golang.org/x/net/context"
 )
 

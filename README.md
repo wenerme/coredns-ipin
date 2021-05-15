@@ -1,13 +1,13 @@
-+++
-title = "ipin"
-description = "*ipin* returns IP address and port based on you domain name."
-weight = 10
-tags = [  "plugin" , "ipin" ]
-categories = [ "plugin", "external" ]
-date = "2017-12-09T02:00:00+08:00"
-repo = "https://github.com/wenerme/wps"
-home = "https://github.com/wenerme/wps/blob/master/coredns/plugin/ipin/README.md"
-+++
+---
+title: "ipin"
+description: "*ipin* returns IP address and port based on you domain name."
+weight: 10
+tags: [  "plugin" , "ipin" ]
+categories: [ "plugin", "external" ]
+date: "2017-12-09T02:00:00+08:00"
+repo: "https://github.com/wenerme/coredns-ipin"
+home: "https://github.com/wenerme/coredns-ipin/blob/master/README.md"
+---
 
 # ipin
 

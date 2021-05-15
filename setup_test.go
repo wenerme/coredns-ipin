@@ -6,7 +6,7 @@ import (
 	"github.com/coredns/caddy"
 )
 
-func TestSetupWhoami(t *testing.T) {
+func TestSetupIpin(t *testing.T) {
 	c := caddy.NewTestController("dns", `ipin`)
 	if err := setup(c); err != nil {
 		t.Fatalf("Expected no errors, but got: %v", err)
