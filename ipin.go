@@ -19,6 +19,7 @@ const Name = "ipin"
 type IpInName struct {
 	// When process failed, will call next plugin
 	Fallback bool
+	Ttl uint32
 	Next     plugin.Handler
 }
 
@@ -40,14 +41,14 @@ func (self IpInName) Resolve(ctx context.Context, w dns.ResponseWriter, r *dns.M
 
 		var rr dns.RR
 		rr = new(dns.A)
-		rr.(*dns.A).Hdr = dns.RR_Header{Name: state.QName(), Rrtype: dns.TypeA, Class: state.QClass()}
+		rr.(*dns.A).Hdr = dns.RR_Header{Name: state.QName(), Rrtype: dns.TypeA, Class: state.QClass(), Ttl: self.Ttl}
 		rr.(*dns.A).A = net.ParseIP(ip).To4()
 
 		a.Answer = []dns.RR{rr}
 
 		if len(matches[2]) > 0 {
 			srv := new(dns.SRV)
-			srv.Hdr = dns.RR_Header{Name: "_port." + state.QName(), Rrtype: dns.TypeSRV, Class: state.QClass()}
+			srv.Hdr = dns.RR_Header{Name: "_port." + state.QName(), Rrtype: dns.TypeSRV, Class: state.QClass(), Ttl: self.Ttl}
 			if state.QName() == "." {
 				srv.Hdr.Name = "_port." + state.QName()
 			}
