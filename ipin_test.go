@@ -12,13 +12,14 @@ import (
 )
 
 func TestWhoami(t *testing.T) {
-	wh := ipin.IpInName{}
+	wh := ipin.IpInName{ Ttl: uint32(86400) }
 
 	tests := []struct {
 		qname         string
 		qtype         uint16
 		expectedCode  int
 		expectedReply []string // ownernames for the records in the additional section.
+		expectedTtl  uint32
 		expectedErr   error
 	}{
 		{
@@ -26,6 +27,7 @@ func TestWhoami(t *testing.T) {
 			qtype:         dns.TypeA,
 			expectedCode:  dns.RcodeSuccess,
 			expectedReply: []string{"192-168-1-2-80.example.org.", "_port.192-168-1-2-80.example.org."},
+			expectedTtl:   uint32(86400),
 			expectedErr:   nil,
 		},
 	}
@@ -56,6 +58,10 @@ func TestWhoami(t *testing.T) {
 			expected = tc.expectedReply[1]
 			if actual != expected {
 				t.Errorf("Test %d: Expected answer %s, but got %s", i, expected, actual)
+			}
+
+			if rec.Msg.Extra[0].Header().Ttl != tc.expectedTtl {
+				t.Errorf("Test %d: Expected answer %d, but got %d", i, tc.expectedTtl, rec.Msg.Extra[0].Header().Ttl)
 			}
 		}
 	}

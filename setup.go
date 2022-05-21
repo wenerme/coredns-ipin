@@ -1,6 +1,8 @@
 package ipin
 
 import (
+	"strconv"
+
 	"github.com/coredns/caddy"
 	"github.com/coredns/coredns/core/dnsserver"
 	"github.com/coredns/coredns/plugin"
@@ -22,6 +24,16 @@ func setup(c *caddy.Controller) error {
 		switch x {
 		case "fallback":
 			ipin.Fallback = true
+		case "ttl":
+			args := c.RemainingArgs()
+			if len(args) < 1 {
+				return c.Errf("ttl needs a time in second")
+			}
+			ttl, err := strconv.Atoi(args[0])
+			if err != nil {
+				return c.Errf("ttl provided is invalid")
+			}
+			ipin.Ttl = uint32(ttl)
 		default:
 			return plugin.Error(Name, c.Errf("unexpected '%v' command", x))
 		}
