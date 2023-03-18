@@ -62,14 +62,18 @@ func TestWhoami(t *testing.T) {
 				t.Errorf("Test %d: Expected answer %s, but got %s", i, expected, actual)
 			}
 
-			actual = rec.Msg.Extra[0].Header().Name
-			expected = tc.expectedReply[1]
-			if actual != expected {
-				t.Errorf("Test %d: Expected answer %s, but got %s", i, expected, actual)
-			}
+			if (rec.Msg.Extra != nil) {
+				actual = rec.Msg.Extra[0].Header().Name
+				expected = tc.expectedReply[1]
+				if actual != expected {
+					t.Errorf("Test %d: Expected answer %s, but got %s", i, expected, actual)
+				}
 
-			if rec.Msg.Extra[0].Header().Ttl != tc.expectedTtl {
-				t.Errorf("Test %d: Expected answer %d, but got %d", i, tc.expectedTtl, rec.Msg.Extra[0].Header().Ttl)
+				if rec.Msg.Extra[0].Header().Ttl != tc.expectedTtl {
+					t.Errorf("Test %d: Expected answer %d, but got %d", i, tc.expectedTtl, rec.Msg.Extra[0].Header().Ttl)
+				}
+			} else if len(tc.expectedReply) > 1 {
+				t.Errorf("Test %d: Expected answer %s, but got no response", i, tc.expectedReply[1])
 			}
 		}
 	}
