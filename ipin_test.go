@@ -30,6 +30,14 @@ func TestWhoami(t *testing.T) {
 			expectedTtl:   uint32(86400),
 			expectedErr:   nil,
 		},
+		{
+			qname:         "fe80--1ff-fe23-4567-890a.example.org",
+			qtype:         dns.TypeAAAA,
+			expectedCode:  dns.RcodeSuccess,
+			expectedReply: []string{"fe80--1ff-fe23-4567-890a.example.org."},
+			expectedTtl:   uint32(86400),
+			expectedErr:   nil,
+		},
 	}
 
 	ctx := context.TODO()

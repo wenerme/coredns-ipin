@@ -24,6 +24,7 @@ type IpInName struct {
 }
 
 var regIpDash = regexp.MustCompile(`^(\d{1,3}-\d{1,3}-\d{1,3}-\d{1,3})(-\d+)?\.`)
+var regIpv6Dash = regexp.MustCompile(`^([a-f\d]{1,4}-[a-f\d]{0,4}-[a-f\d]{0,4}-?[a-f\d]{0,4}-?[a-f\d]{0,4}-?[a-f\d]{0,4}-?[a-f\d]{0,4}-?[a-f\d]{0,4})\.`)
 
 func (self IpInName) Name() string { return Name }
 func (self IpInName) Resolve(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (*dns.Msg, int, error) {
@@ -35,6 +36,7 @@ func (self IpInName) Resolve(ctx context.Context, w dns.ResponseWriter, r *dns.M
 	a.Authoritative = true
 
 	matches := regIpDash.FindStringSubmatch(state.QName())
+	matches_v6 := regIpv6Dash.FindStringSubmatch(state.QName())
 	if len(matches) > 1 {
 		ip := matches[1]
 		ip = strings.Replace(ip, "-", ".", -1)
@@ -58,6 +60,16 @@ func (self IpInName) Resolve(ctx context.Context, w dns.ResponseWriter, r *dns.M
 
 			a.Extra = []dns.RR{srv}
 		}
+	} else if len(matches_v6) > 1 {
+		ip := matches_v6[1]
+		ip = strings.Replace(ip, "-", ":", -1)
+
+		var rr dns.RR
+		rr = new(dns.AAAA)
+		rr.(*dns.AAAA).Hdr = dns.RR_Header{Name: state.QName(), Rrtype: dns.TypeAAAA, Class: state.QClass(), Ttl: self.Ttl}
+		rr.(*dns.AAAA).AAAA = net.ParseIP(ip).To16()
+
+		a.Answer = []dns.RR{rr}
 	} else {
 		// return empty
 	}
